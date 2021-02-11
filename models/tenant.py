@@ -17,7 +17,12 @@ class TenantModel(BaseModel):
     # relationships
     staff = relationship("UserModel", secondary="staff_tenant_links")
     leases = db.relationship(
-        "LeaseModel", backref="tenant", lazy="dynamic", cascade="all, delete-orphan"
+        "LeaseModel",
+        backref="tenant",
+        # lazy="dynamic" is required so that we can filter() over leases in
+        # json(). See: https://stackoverflow.com/questions/11578070
+        lazy="dynamic",
+        cascade="all, delete-orphan",
     )
 
     def json(self):
